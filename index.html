@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Proxy Server</title>
+  </head>
+  <body>
+    <script>
+      function proxyRequest(url) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var contentType = xhr.getResponseHeader("Content-Type");
+            var responseData = xhr.responseText;
+            renderResponse(contentType, responseData);
+          }
+        };
+        xhr.send();
+      }
+
+      function renderResponse(contentType, responseData) {
+        var outputElement = document.getElementById("output");
+        if (contentType.indexOf("text/html") !== -1) {
+          outputElement.innerHTML = responseData;
+        } else {
+          outputElement.textContent = responseData;
+        }
+      }
+
+      function handleSubmit(event) {
+        event.preventDefault();
+        var url = document.getElementById("urlInput").value;
+        proxyRequest(url);
+      }
+
+      document.getElementById("proxyForm").addEventListener("submit", handleSubmit);
+    </script>
+
+    <h1>Proxy Server</h1>
+
+    <form id="proxyForm">
+      <input type="text" id="urlInput" placeholder="Enter URL">
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="output"></div>
+  </body>
+</html>
